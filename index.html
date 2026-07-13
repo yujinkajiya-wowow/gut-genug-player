@@ -1,1 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>gut genug</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #0d0d0d;
+    color: #eee;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #0d0d0d;
+    cursor: pointer;
+    text-align: center;
+  }
+  #overlay button {
+    padding: 18px 36px;
+    font-size: 18px;
+    border-radius: 999px;
+    border: none;
+    background: #eee;
+    color: #0d0d0d;
+    cursor: pointer;
+  }
+  #status {
+    font-size: 14px;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+  <div id="status">再生準備中…</div>
+  <div id="overlay">
+    <button id="playBtn">▶ 再生する</button>
+  </div>
 
+  <audio id="player" src="gut-genug.mp3" preload="auto"></audio>
+
+  <script>
+    const player = document.getElementById('player');
+    const status = document.getElementById('status');
+    const overlay = document.getElementById('overlay');
+    const playBtn = document.getElementById('playBtn');
+
+    function tryPlay() {
+      const p = player.play();
+      if (p !== undefined) {
+        p.then(() => {
+          status.textContent = '再生中';
+          overlay.style.display = 'none';
+        }).catch(() => {
+          // Autoplay blocked by browser policy — needs one click.
+          status.style.display = 'none';
+          overlay.style.display = 'flex';
+        });
+      }
+    }
+
+    window.addEventListener('load', tryPlay);
+    overlay.addEventListener('click', () => {
+      player.play();
+      overlay.style.display = 'none';
+      status.style.display = 'block';
+      status.textContent = '再生中';
+    });
+  </script>
+</body>
+</html>
